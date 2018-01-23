@@ -1,0 +1,19 @@
+@charset "utf-8";
+.toast{
+	width: 16.875rem;
+	padding: 0.75rem;
+	position: fixed;
+	left: 50%;
+	margin-left: -8.4375rem;
+	top: 39%;
+	border-radius: 3px;
+	font-size: 0.75rem;
+	color: #fff;
+	background: rgba(0,0,0,0.6);
+	display: none;
+}
+.toast span{
+	display: block;
+	color: #fff;
+	text-align: center;
+}
