@@ -2,19 +2,51 @@ var inv = {
 	codeBtn:$("#getcode"),
 	CodeNum:60,
 	init:function(){
-		
+		inv.load();
+		inv.bind();
 	},
 	bind:function(){
-		
+		$.unblockUI();
+		//姓名校验
+		$('#name').bind('focus',function(){
+			inv.showerror('hide');
+		}).bind('blur',function(){
+			inv.checkName();
+		})
 	},
 	submitForm:function(){
 		
 	},
 	checkName:function(){
-		
+		inv.showerror('hide');
+		var nameVal = $('#name').val();
+		if(!nameVal){
+			inv.showerror('请输入您的姓名');
+			return false;
+		}else if(!(/(^[\u4e00-\u9fa5\s]{2}|[a-zA-Z]{4})([\u4e00-\u9fa5\s]{0,18}|[. ]{0,36}|[. ]{0,36}|[a-zA-Z]{0,36})?$/.test(nameVal))){
+			inv.showerror('请输入正确的姓名');
+			return false;
+		}else if(nameVal == '不详' || nameVal == '不知道' || nameVal == '未知' || nameVal == '姓名' || nameVal.indexOf('测试') > -1 || nameVal.indexOf('test') > -1){
+			inv.showerror('请输入正确的姓名');
+			return false;
+		}else{
+			inv.showerror('hide');
+			return true;
+		}
 	},
 	checkPassword:function(){
-		
+		inv.showerror('hide');
+		var passwordVal = $('#password').val();
+		if(!passwordVal){
+			inv.showerror('请输入您的密码');
+			return false;		
+		}else if(passwordVal && !(/^(\w){6,20}$/.test(passwordVal))){
+			inv.showerror('密码不合规范');
+			return false;
+		}else{
+			inv.showerror('hide');
+			return true;
+		}
 	},
 	checkMobile:function(){
 		
@@ -36,7 +68,7 @@ var inv = {
 			return false;
 		}else if(smsCode.length != 6){
 			inv.showerror('验证码不合规范')
-		}else if(!/^/d{6}$/.test(smsCode)){
+		}else if(!/^\d{6}$/.test(smsCode)){
 			inv.showerror('验证码不合规范');
 			return false;
 		}
@@ -80,7 +112,20 @@ var inv = {
         if (r != null) return unescape(r[2]); return null;  
 	},
 	load:function(){
-		
+		$.blockUI({
+			message:"<img src='img/load.gif'/>",
+			css:{
+				top:($(window).height()-50)/2+'px',
+				left:($(window).width()-50)/2+'px',
+				width:'50px',
+				height:'50px',
+				border:'none',
+				background:'none'
+			},
+			overlayCSS:{
+				backgroundColor:'#fff'
+			}
+		})
 	},
 	dateInit:function(){
 		
