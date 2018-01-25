@@ -12,7 +12,39 @@ var inv = {
 			inv.showerror('hide');
 		}).bind('blur',function(){
 			inv.checkName();
+		});
+		//手机号校验
+		$('#phone').bind('focus',function(){
+			inv.showerror('hide');
+		}).bind('blur',function(){
+			inv.checkMobile();
+		});
+		//验证码校验
+		$('#code').bind('focus',function(){
+			inv.showerror('hide');
+		}).bind('blur',function(){
+			inv.inputSmsCodeValidator();
+		});
+		//防止重复提交表单
+		$('#submitBtn').click(function(){
+			if($(this).hasClass('loading')){
+				return;
+			}
+			inv.submitForm();
+		});
+		//防止表单提交两次
+		$('form').click(function(e){
+			e.preventDefault();
+			return false;
+		});
+		inv.dateInit();
+		//点击获取验证码
+		$("#getcode").click(function(){
+			if(!$(this).data('obtaining')&& inv.checkMobile()){
+				inv.obtainCode();
+			}
 		})
+		
 	},
 	submitForm:function(){
 		
