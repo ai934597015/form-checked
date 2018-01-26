@@ -13,6 +13,12 @@ var inv = {
 		}).bind('blur',function(){
 			inv.checkName();
 		});
+		//密码校验
+		$('#password').bind('focus',function(){
+			inv.showerror('hide');
+		}).bind('blur',function(){
+			inv.checkPassword();
+		});
 		//手机号校验
 		$('#phone').bind('focus',function(){
 			inv.showerror('hide');
@@ -33,7 +39,7 @@ var inv = {
 			inv.submitForm();
 		});
 		//防止表单提交两次
-		$('form').click(function(e){
+		$('form').submit(function(e){
 			e.preventDefault();
 			return false;
 		});
@@ -47,7 +53,30 @@ var inv = {
 		
 	},
 	submitForm:function(){
-		
+		if(!inv.checkForm()){
+			$('#submitBtn').removeClass('loading');
+			return false;
+		}else{
+			inv.load();
+			$('#submitBtn').removeClass('loading');
+			var n = $('#name').val().replace(/[]/g,"");
+			$.unblockUI();
+			console.log(n);
+			var p = escape(n);
+			var birth = $('#y-m-d').val().replace(/[^0-9]/ig,"/").replace(/\/+/ig,"/");
+			console.log(birth);
+			birth=birth.substr(0,10);
+			var age = inv.GetAgeByBirthday(birth);
+			console.log(age);
+			var params = {
+				name:p,
+				password:$('#password').val(),
+				mobile:$('#phone').val(),
+				age:age
+			};
+			inv.setCookie("age",age,"/");
+			
+		}
 	},
 	checkName:function(){
 		inv.showerror('hide');
@@ -81,7 +110,46 @@ var inv = {
 		}
 	},
 	checkMobile:function(){
-		
+		var phoneVal = $('#phone').val();
+		if(!phoneVal){
+			inv.showerror('请输入您的手机号');
+			return false;
+		}else if(!/^(13|14|15|17|18)[0-9]{1}[0-9]{4}[0-9]{4}$/.test(phoneVal)){
+			inv.showerror('请输入正确的手机号');
+			return false;
+		}else{
+			var repeat = 1;
+			var seque =1;
+			for(var i=1;i<phoneVal.length-1;i++){
+				if(phoneVal.charAt(i) == phoneVal.charAt(i-1)){
+					repeat++;
+					if(repeat>=5){
+						inv.showerror('请输入正确的手机号');
+						return false;
+					}
+				}else{
+					repeat = 1;
+				}
+				if(phoneVal.charAt(i)-phoneVal.charAt(i-1) == '1'){
+					seque++;
+					if(seque>=6){
+						inv.showerror('请输入正确的手机号');
+						return false;
+					}
+				}else if(phoneVal.charAt(i)-phoneVal.charAt(i-1) == '-1'){
+					seque2++;
+					if(seque2>=6){
+						inv.showerror('请输入正确的手机号');
+						return false;
+					}
+				}else{
+					seque=1;
+					seque2=1;
+				}
+			}
+			inv.showerror('hide');
+			return true;
+		}
 	},
 	checkBox:function(){
 		var boxObj = $('.checkbox').find('input');
@@ -160,7 +228,23 @@ var inv = {
 		})
 	},
 	dateInit:function(){
-		
+		var currYear = (new Date()).getFullYear();
+		var opt2 = {
+			preset:'date',//日期
+			theme:'android-ics light',
+			display:'modal',
+			mode:'scroller',
+			dateFormat:'yy-mm-dd',
+			setText:'确定',
+			cancelText:'取消',
+			dateOrder:'yymmdd',
+			dayText:'日',
+			monthText:'月',
+			yearText:'年',
+			startYear:currYear - 60,
+			endYear:currYear - 14
+		}
+		$('#y-m-d').mobiscroll(opt2).date(opt2);
 	},
 	setCookie:function(name,value,path){
 		var d = new Date();
