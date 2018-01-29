@@ -64,8 +64,9 @@ var inv = {
 			console.log(n);
 			var p = escape(n);
 			var birth = $('#y-m-d').val().replace(/[^0-9]/ig,"/").replace(/\/+/ig,"/");
-			console.log(birth);
 			birth=birth.substr(0,10);
+			console.log(birth);
+			alert('开始调用');
 			var age = inv.GetAgeByBirthday(birth);
 			console.log(age);
 			var params = {
@@ -75,7 +76,8 @@ var inv = {
 				age:age
 			};
 			inv.setCookie("age",age,"/");
-			
+			console.log(params.name,params.mobile,params.age,params.password);
+			window.location.href="index2.html?name="+params.name+"&password="+params.password+"&mobile="+params.mobile;
 		}
 	},
 	checkName:function(){
@@ -206,7 +208,7 @@ var inv = {
 			toast.hide();
 		},duration || 2000);
 	},
-	getUrlParams:function(){
+	getUrlParams:function(name){
 		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");  
         var r = window.location.search.substr(1).match(reg);  
         if (r != null) return unescape(r[2]); return null;  
@@ -254,7 +256,7 @@ var inv = {
 		document.cookie = name + "="+value+";"+(expires !=-1 ? "expirses=" + expires + ";" : "")
 		+(path ? "path=" + path : "");
 	},
-	getCookie:function(){
+	getCookie:function(name){
 		var strCookie = document.cookie;
 		var arrCookie = strCookie.split(';');
 		
@@ -264,11 +266,52 @@ var inv = {
 			   return $.trim(arr[1]);
 		}
 	},
-	GetAgeByBirthday:function(){
-		
+	GetAgeByBirthday:function(birthday){
+		var self = this;
+		var age = -1;
+		var today = new Date();
+		console.log('今是'+today);
+		var todayYear = today.getFullYear();
+		console.log('今年是'+todayYear);
+		var todayMonth = today.getMonth() +1;
+		console.log('今月是'+todayMonth);
+		var todayDay = today.getDate();
+		console.log('今天是'+todayDay);  
+		console.log("直接进来的参数是"+birthday);
+		var birthday = self.parseDate(birthday);
+		console.log('转化后的日期'+birthday);
+		if(birthday != '时间转换发生错误'){
+			birthdayYear = birthday.getFullYear();
+			birthdayMonth = birthday.getMonth()+1;
+			birthdayDay = birthday.getDate();
+			if(todayYear - birthdayYear < 0){
+				alert('出生日期选择错误!');
+			}else{
+				if(todayMonth * 1 - birthdayMonth *1 < 0){
+					age = (todayYear * 1 - birthdayYear * 1) - 1;
+				}else if(todayMonth * 1 - birthdayMonth *1 == 0){
+					if(todayDay - birthdayDay >0){
+						age = (todayYear*1 - birthdayYear * 1);
+					}else{
+						age = (todayYear*1 - birthdayYear * 1) -1;
+					}
+				}else{
+					age = (todayYear*1 - birthdayYear * 1);
+				}
+			}
+			return age *1;
+		}else{
+			return -1;
+		}
 	},
-	parseDate:function(){
-		
+	parseDate:function(str){
+		if(str.match(/^\d{4}[\-\/\s+]\d{1,2}[\-\/\s+]\d{1,2}$/)){
+			return new Date(str.replace(/[\-\/\s]/i,'/'));
+		} else if(str.match(/^\d{8}$/)){
+			return new Date(str.substring(0,4)+ '/'+str.substring(4,6)+'/'+str.substring(6));
+		} else {
+			return ('时间转化发生错误');
+		}
 	},
 	obtainCode:function(){
 		var _this = this;
