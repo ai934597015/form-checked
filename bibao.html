@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		<script>
+//			function f1(){
+//			　　　　var n=999;
+//			
+//			　　　　nAdd=function(){n+=1}
+//			
+//			　　　　function f2(){
+//			　　　　　　console.log(n);
+//			　　　　}
+//			
+//			　　　　return f2;
+//			
+//			　　}
+//
+//	　　var result=f1();
+//	
+//	　　result(); // 999
+//	
+//	　　nAdd();
+//	
+//	　　result(); // 1000
+	
+	
+	
+	
+	var name = "The Window";
+　　var object = {
+　　　　name : "My Object",
+
+　　　　getNameFunc : function(){
+			alert(this.name);
+　　　　　　return function(){
+　　　　　　　　return this.name;
+　　　　　　};
+
+　　　　}
+
+　　};
+
+　　alert(object.getNameFunc()());
+
+//	　var name = "The Window";
+
+//　　var object = {
+//　　　　name : "My Object",
+//
+//　　　　getNameFunc : function(){
+//　　　　　　var that = this;
+//　　　　　　return function(){
+//　　　　　　　　return that.name;
+//　　　　　　};
+//
+//　　　　}
+//
+//　　};
+//
+//　　alert(object.getNameFunc()()); 
+
+
+		</script>
+	</body>
+</html>
